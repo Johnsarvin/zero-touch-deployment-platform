@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zero-touch-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: zero-touch-app
+  template:
+    metadata:
+      labels:
+        app: zero-touch-app
+    spec:
+      containers:
+      - name: zero-touch-app
+        image: zero:v1
+        ports:
+        - containerPort: 80
