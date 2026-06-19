@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Neon Calculator</title>
+<title>Neon Calculator Pro</title>
 
 <style>
 body {
@@ -12,10 +12,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: Arial, sans-serif;
+  font-family: system-ui, Arial;
   background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #ff00cc);
   background-size: 400% 400%;
-  animation: bg 10s ease infinite;
+  animation: bg 12s ease infinite;
 }
 
 @keyframes bg {
@@ -26,32 +26,32 @@ body {
 
 .calculator {
   width: 340px;
-  padding: 22px;
+  padding: 20px;
   border-radius: 22px;
   background: rgba(255,255,255,0.08);
   backdrop-filter: blur(18px);
-  box-shadow: 0 0 25px rgba(0,0,0,0.5);
+  box-shadow: 0 0 30px rgba(0,0,0,0.6);
 }
 
 #display {
   width: 100%;
-  height: 75px;
-  font-size: 32px;
+  height: 70px;
+  font-size: 30px;
   text-align: right;
   padding: 10px;
   border: none;
   border-radius: 14px;
   margin-bottom: 15px;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.5);
   color: #00ffe5;
   outline: none;
-  box-shadow: inset 0 0 10px rgba(0,255,229,0.3);
+  box-shadow: inset 0 0 12px rgba(0,255,229,0.4);
 }
 
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
 button {
@@ -63,13 +63,11 @@ button {
   color: white;
   background: rgba(255,255,255,0.12);
   transition: 0.2s;
-  box-shadow: 0 0 8px rgba(255,255,255,0.1);
 }
 
 button:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 15px rgba(0,255,255,0.6);
-  background: rgba(255,255,255,0.25);
+  transform: scale(1.07);
+  box-shadow: 0 0 14px rgba(0,255,255,0.6);
 }
 
 .equal {
@@ -82,8 +80,8 @@ button:hover {
   background: linear-gradient(45deg, #ff4d4d, #ff0066);
 }
 
-button:nth-child(4n) {
-  background: rgba(255, 0, 204, 0.25);
+.op {
+  color: #ffccff;
 }
 </style>
 </head>
@@ -95,19 +93,19 @@ button:nth-child(4n) {
 
   <div class="buttons">
     <button class="clear" onclick="clearDisplay()">C</button>
-    <button onclick="append('/')">/</button>
-    <button onclick="append('*')">*</button>
+    <button class="op" onclick="append('/')">/</button>
+    <button class="op" onclick="append('*')">*</button>
     <button onclick="deleteLast()">⌫</button>
 
     <button onclick="append('7')">7</button>
     <button onclick="append('8')">8</button>
     <button onclick="append('9')">9</button>
-    <button onclick="append('-')">-</button>
+    <button class="op" onclick="append('-')">-</button>
 
     <button onclick="append('4')">4</button>
     <button onclick="append('5')">5</button>
     <button onclick="append('6')">6</button>
-    <button onclick="append('+')">+</button>
+    <button class="op" onclick="append('+')">+</button>
 
     <button onclick="append('1')">1</button>
     <button onclick="append('2')">2</button>
@@ -120,9 +118,15 @@ button:nth-child(4n) {
 </div>
 
 <script>
-let display = document.getElementById("display");
+const display = document.getElementById("display");
 
 function append(v) {
+  const last = display.value.slice(-1);
+  const ops = "+-*/";
+
+  // prevent duplicate operators
+  if (ops.includes(last) && ops.includes(v)) return;
+
   display.value += v;
 }
 
@@ -136,14 +140,25 @@ function deleteLast() {
 
 function calculate() {
   try {
-    display.value = Function("return " + display.value)();
+    if (!display.value) return;
+
+    // safer evaluation using Function but with validation
+    if (/[^0-9+\-*/.]/.test(display.value)) {
+      display.value = "Error";
+      return;
+    }
+
+    display.value = new Function("return " + display.value)();
   } catch {
     display.value = "Error";
   }
 }
 
+// keyboard support
 document.addEventListener("keydown", (e) => {
-  if (!isNaN(e.key) || "+-*/.".includes(e.key)) append(e.key);
+  const keys = "0123456789+-*/.";
+
+  if (keys.includes(e.key)) append(e.key);
   else if (e.key === "Enter") calculate();
   else if (e.key === "Backspace") deleteLast();
   else if (e.key.toLowerCase() === "c") clearDisplay();
