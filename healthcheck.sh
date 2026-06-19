@@ -1,6 +1,6 @@
 #!/bin/bash
 
-STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080)
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:9123)
 
 if [ "$STATUS" = "200" ]
 then
