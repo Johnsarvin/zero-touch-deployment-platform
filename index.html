@@ -1,78 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calculator</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Enhanced Calculator</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #1e1e2f;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    font-family: Arial, sans-serif;
+  }
 
-    .calculator {
-      background: #2c2c3c;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      width: 280px;
-    }
+  .calculator {
+    width: 320px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
 
-    #display {
-      width: 100%;
-      height: 60px;
-      font-size: 24px;
-      text-align: right;
-      padding: 10px;
-      border: none;
-      border-radius: 10px;
-      margin-bottom: 15px;
-    }
+  #display {
+    width: 100%;
+    height: 70px;
+    font-size: 28px;
+    text-align: right;
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 15px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    outline: none;
+  }
 
-    .buttons {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
 
-    button {
-      padding: 15px;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      background: #444;
-      color: white;
-      transition: 0.2s;
-    }
+  button {
+    padding: 18px;
+    font-size: 18px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    transition: 0.2s;
+  }
 
-    button:hover {
-      background: #666;
-    }
+  button:hover {
+    background: rgba(255,255,255,0.35);
+    transform: scale(1.05);
+  }
 
-    .equal {
-      background: #1abc9c;
-    }
+  .equal {
+    background: #00c9a7;
+  }
 
-    .clear {
-      background: #e74c3c;
-    }
-  </style>
+  .clear {
+    background: #ff4d4d;
+  }
+</style>
 </head>
 
 <body>
 
 <div class="calculator">
-  <input type="text" id="display" disabled />
+  <input id="display" disabled />
 
   <div class="buttons">
-    <button onclick="clearDisplay()" class="clear">C</button>
+    <button class="clear" onclick="clearDisplay()">C</button>
     <button onclick="append('/')">/</button>
     <button onclick="append('*')">*</button>
     <button onclick="deleteLast()">⌫</button>
@@ -90,7 +95,7 @@
     <button onclick="append('1')">1</button>
     <button onclick="append('2')">2</button>
     <button onclick="append('3')">3</button>
-    <button onclick="calculate()" class="equal">=</button>
+    <button class="equal" onclick="calculate()">=</button>
 
     <button onclick="append('0')" style="grid-column: span 2;">0</button>
     <button onclick="append('.')">.</button>
@@ -98,27 +103,42 @@
 </div>
 
 <script>
-  let display = document.getElementById("display");
+let display = document.getElementById("display");
 
-  function append(value) {
-    display.value += value;
-  }
+function append(value) {
+  display.value += value;
+}
 
-  function clearDisplay() {
-    display.value = "";
-  }
+function clearDisplay() {
+  display.value = "";
+}
 
-  function deleteLast() {
-    display.value = display.value.slice(0, -1);
-  }
+function deleteLast() {
+  display.value = display.value.slice(0, -1);
+}
 
-  function calculate() {
-    try {
-      display.value = eval(display.value);
-    } catch {
-      display.value = "Error";
-    }
+/* Safer calculation instead of eval */
+function calculate() {
+  try {
+    let result = Function("return " + display.value)();
+    display.value = result;
+  } catch {
+    display.value = "Error";
   }
+}
+
+/* Keyboard support */
+document.addEventListener("keydown", (e) => {
+  if (!isNaN(e.key) || "+-*/.".includes(e.key)) {
+    append(e.key);
+  } else if (e.key === "Enter") {
+    calculate();
+  } else if (e.key === "Backspace") {
+    deleteLast();
+  } else if (e.key.toLowerCase() === "c") {
+    clearDisplay();
+  }
+});
 </script>
 
 </body>
