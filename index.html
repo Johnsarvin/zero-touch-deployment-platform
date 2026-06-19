@@ -3,71 +3,88 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Enhanced Calculator</title>
+<title>Neon Calculator</title>
 
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #1f1c2c, #928dab);
-    font-family: Arial, sans-serif;
-  }
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #ff00cc);
+  background-size: 400% 400%;
+  animation: bg 10s ease infinite;
+}
 
-  .calculator {
-    width: 320px;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(15px);
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  }
+@keyframes bg {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
 
-  #display {
-    width: 100%;
-    height: 70px;
-    font-size: 28px;
-    text-align: right;
-    border: none;
-    border-radius: 12px;
-    padding: 10px;
-    margin-bottom: 15px;
-    background: rgba(255,255,255,0.2);
-    color: white;
-    outline: none;
-  }
+.calculator {
+  width: 340px;
+  padding: 22px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 0 25px rgba(0,0,0,0.5);
+}
 
-  .buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
+#display {
+  width: 100%;
+  height: 75px;
+  font-size: 32px;
+  text-align: right;
+  padding: 10px;
+  border: none;
+  border-radius: 14px;
+  margin-bottom: 15px;
+  background: rgba(0,0,0,0.4);
+  color: #00ffe5;
+  outline: none;
+  box-shadow: inset 0 0 10px rgba(0,255,229,0.3);
+}
 
-  button {
-    padding: 18px;
-    font-size: 18px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    background: rgba(255,255,255,0.2);
-    color: white;
-    transition: 0.2s;
-  }
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
 
-  button:hover {
-    background: rgba(255,255,255,0.35);
-    transform: scale(1.05);
-  }
+button {
+  padding: 18px;
+  font-size: 18px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  color: white;
+  background: rgba(255,255,255,0.12);
+  transition: 0.2s;
+  box-shadow: 0 0 8px rgba(255,255,255,0.1);
+}
 
-  .equal {
-    background: #00c9a7;
-  }
+button:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 15px rgba(0,255,255,0.6);
+  background: rgba(255,255,255,0.25);
+}
 
-  .clear {
-    background: #ff4d4d;
-  }
+.equal {
+  background: linear-gradient(45deg, #00c9a7, #00ffcc);
+  color: black;
+  font-weight: bold;
+}
+
+.clear {
+  background: linear-gradient(45deg, #ff4d4d, #ff0066);
+}
+
+button:nth-child(4n) {
+  background: rgba(255, 0, 204, 0.25);
+}
 </style>
 </head>
 
@@ -105,8 +122,8 @@
 <script>
 let display = document.getElementById("display");
 
-function append(value) {
-  display.value += value;
+function append(v) {
+  display.value += v;
 }
 
 function clearDisplay() {
@@ -117,30 +134,21 @@ function deleteLast() {
   display.value = display.value.slice(0, -1);
 }
 
-/* Safer calculation instead of eval */
 function calculate() {
   try {
-    let result = Function("return " + display.value)();
-    display.value = result;
+    display.value = Function("return " + display.value)();
   } catch {
     display.value = "Error";
   }
 }
 
-/* Keyboard support */
 document.addEventListener("keydown", (e) => {
-  if (!isNaN(e.key) || "+-*/.".includes(e.key)) {
-    append(e.key);
-  } else if (e.key === "Enter") {
-    calculate();
-  } else if (e.key === "Backspace") {
-    deleteLast();
-  } else if (e.key.toLowerCase() === "c") {
-    clearDisplay();
-  }
+  if (!isNaN(e.key) || "+-*/.".includes(e.key)) append(e.key);
+  else if (e.key === "Enter") calculate();
+  else if (e.key === "Backspace") deleteLast();
+  else if (e.key.toLowerCase() === "c") clearDisplay();
 });
 </script>
 
 </body>
 </html>
-trigger build Fri Jun 19 02:58:11 PM UTC 2026
