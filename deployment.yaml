@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: zero-touch-app
-        image: zero:v1
+        image: zero:v2
         ports:
         - containerPort: 80
