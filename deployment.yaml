@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: zero-touch-app
+  labels:
+    app: zero-touch-app
 spec:
   replicas: 3
   selector:
@@ -14,6 +16,7 @@ spec:
     spec:
       containers:
       - name: zero-touch-app
-        image: zero:v1
+        image: zero:v2
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
