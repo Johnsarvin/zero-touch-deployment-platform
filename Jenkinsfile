@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'docker build -t zero:v1 .'
+                sh 'docker build -t zero:v2 .'
             }
         }
 
