@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker build -t zero:v2 .
+docker build -t zero:v1 .
 
 docker rm -f zero || true
 
