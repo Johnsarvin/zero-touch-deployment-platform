@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: zero-touch-app
-        image: zero:v2
+        image: zero:v1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
