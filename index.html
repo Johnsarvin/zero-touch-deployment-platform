@@ -1,355 +1,45 @@
+  GNU nano 8.7.1                                                                             index.html                                                                                       
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Calculator</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #141e30, #243b55);
-        }
-
-        .calculator {
-            width: 360px;
-            padding: 25px;
-            border-radius: 25px;
-            background: #1e293b;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-        }
-
-        h2 {
-            color: white;
-            text-align: center;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-        }
-
-        .display {
-            width: 100%;
-            height: 100px;
-            margin-bottom: 20px;
-            padding: 15px;
-            border: none;
-            outline: none;
-            border-radius: 15px;
-            background: #0f172a;
-            color: #38bdf8;
-            text-align: right;
-            font-size: 30px;
-        }
-
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-
-        button {
-            height: 58px;
-            border: none;
-            border-radius: 14px;
-            background: #334155;
-            color: white;
-            font-size: 19px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        button:hover {
-            background: #475569;
-            transform: scale(1.04);
-        }
-
-        .operator {
-            background: #7c3aed;
-        }
-
-        .operator:hover {
-            background: #6d28d9;
-        }
-
-        .special {
-            background: #0891b2;
-        }
-
-        .special:hover {
-            background: #0e7490;
-        }
-
-        .clear {
-            background: #dc2626;
-        }
-
-        .clear:hover {
-            background: #b91c1c;
-        }
-
-        .equal {
-            background: #16a34a;
-            grid-row: span 2;
-            height: 126px;
-        }
-
-        .equal:hover {
-            background: #15803d;
-        }
-
-        .zero {
-            grid-column: span 2;
-        }
-
-        .history {
-            margin-top: 20px;
-            color: #cbd5e1;
-            font-size: 14px;
-            max-height: 100px;
-            overflow-y: auto;
-        }
-
-        .history h3 {
-            margin-bottom: 8px;
-            color: #38bdf8;
-        }
-
-        .history p {
-            padding: 5px 0;
-            border-bottom: 1px solid #334155;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="calculator">
-
-    <h2>ADVANCED CALCULATOR</h2>
-
-    <input type="text" class="display" id="display"
-           placeholder="0" readonly>
-
-    <div class="buttons">
-
-        <button class="clear" onclick="clearDisplay()">AC</button>
-        <button class="special" onclick="deleteLast()">DEL</button>
-        <button class="special" onclick="append('(')">(</button>
-        <button class="special" onclick="append(')')">)</button>
-
-        <button class="special" onclick="scientific('sqrt')">√</button>
-        <button class="special" onclick="scientific('square')">x²</button>
-        <button class="special" onclick="scientific('percent')">%</button>
-        <button class="operator" onclick="append('/')">÷</button>
-
-        <button onclick="append('7')">7</button>
-        <button onclick="append('8')">8</button>
-        <button onclick="append('9')">9</button>
-        <button class="operator" onclick="append('*')">×</button>
-
-        <button onclick="append('4')">4</button>
-        <button onclick="append('5')">5</button>
-        <button onclick="append('6')">6</button>
-        <button class="operator" onclick="append('-')">−</button>
-
-        <button onclick="append('1')">1</button>
-        <button onclick="append('2')">2</button>
-        <button onclick="append('3')">3</button>
-        <button class="operator" onclick="append('+')">+</button>
-
-        <button class="zero" onclick="append('0')">0</button>
-        <button onclick="append('.')">.</button>
-        <button class="equal" onclick="calculate()">=</button>
-
-        <button class="special" onclick="scientific('sin')">sin</button>
-        <button class="special" onclick="scientific('cos')">cos</button>
-        <button class="special" onclick="scientific('tan')">tan</button>
-        <button class="special" onclick="scientific('log')">log</button>
-
-        <button class="special" onclick="scientific('ln')">ln</button>
-        <button class="special" onclick="append('Math.PI')">π</button>
-        <button class="special" onclick="append('Math.E')">e</button>
-        <button class="special" onclick="scientific('factorial')">n!</button>
-
-    </div>
-
-    <div class="history">
-        <h3>Calculation History</h3>
-        <div id="history"></div>
-    </div>
-
-</div>
-
-<script>
-    const display = document.getElementById("display");
-    const historyBox = document.getElementById("history");
-
-    function append(value) {
-        if (display.value === "Error") {
-            display.value = "";
-        }
-        display.value += value;
-    }
-
-    function clearDisplay() {
-        display.value = "";
-    }
-
-    function deleteLast() {
-        display.value = display.value.slice(0, -1);
-    }
-
-    function calculate() {
-        try {
-            const expression = display.value;
-
-            if (!expression.trim()) return;
-
-            // Allow only calculator expression characters.
-            if (!/^[0-9+\-*/().\s%a-zA-Z]*$/.test(expression)) {
-                throw new Error("Invalid input");
-            }
-
-            // Permit only Math.PI and Math.E constants.
-            const cleaned = expression
-                .replace(/Math\.PI/g, "Math.PI")
-                .replace(/Math\.E/g, "Math.E");
-
-            if (/Math\.(?!PI\b|E\b)/.test(cleaned)) {
-                throw new Error("Invalid expression");
-            }
-
-            // Restrict evaluation to arithmetic expressions and constants.
-            const tokens = cleaned.replace(/Math\.PI|Math\.E/g, "");
-
-            if (/[a-zA-Z]/.test(tokens)) {
-                throw new Error("Invalid expression");
-            }
-
-            const result = Function(
-                '"use strict"; return (' + cleaned + ')'
-            )();
-
-            if (typeof result !== "number" || !Number.isFinite(result)) {
-                throw new Error("Invalid result");
-            }
-
-            historyBox.innerHTML =
-                `<p>${escapeHTML(expression)} = ${result}</p>` +
-                historyBox.innerHTML;
-
-            display.value = Number(result.toPrecision(12)).toString();
-
-        } catch (error) {
-            display.value = "Error";
-        }
-    }
-
-    function scientific(operation) {
-        try {
-            const value = Number(display.value);
-
-            if (display.value.trim() === "" || !Number.isFinite(value)) {
-                return;
-            }
-
-            let result;
-
-            switch (operation) {
-                case "sqrt":
-                    result = Math.sqrt(value);
-                    break;
-
-                case "square":
-                    result = value * value;
-                    break;
-
-                case "percent":
-                    result = value / 100;
-                    break;
-
-                case "sin":
-                    result = Math.sin(value * Math.PI / 180);
-                    break;
-
-                case "cos":
-                    result = Math.cos(value * Math.PI / 180);
-                    break;
-
-                case "tan":
-                    result = Math.tan(value * Math.PI / 180);
-                    break;
-
-                case "log":
-                    result = Math.log10(value);
-                    break;
-
-                case "ln":
-                    result = Math.log(value);
-                    break;
-
-                case "factorial":
-                    if (!Number.isInteger(value) || value < 0 || value > 170) {
-                        throw new Error("Invalid factorial");
-                    }
-
-                    result = 1;
-
-                    for (let i = 2; i <= value; i++) {
-                        result *= i;
-                    }
-                    break;
-
-                default:
-                    throw new Error("Unknown operation");
-            }
-
-            if (!Number.isFinite(result)) {
-                throw new Error("Invalid result");
-            }
-
-            historyBox.innerHTML =
-                `<p>${operation}(${value}) = ${result}</p>` +
-                historyBox.innerHTML;
-
-            display.value = Number(result.toPrecision(12)).toString();
-
-        } catch (error) {
-            display.value = "Error";
-        }
-    }
-
-    function escapeHTML(value) {
-        return String(value).replace(/[&<>"']/g, character => ({
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;"
-        })[character]);
-    }
-
-    document.addEventListener("keydown", function(event) {
-        if (/^[0-9+\-*/().%]$/.test(event.key)) {
-            append(event.key);
-        } else if (event.key === "Enter") {
-            calculate();
-        } else if (event.key === "Backspace") {
-            deleteLast();
-        } else if (event.key === "Escape") {
-            clearDisplay();
-        }
-    });
-</script>
-
-</body>
-</html>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Neon Calculator Pro</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: system-ui, Arial;
+  background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #ff00cc);
+  background-size: 400% 400%;
+  animation: bg 12s ease infinite;
+}
+
+@keyframes bg {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+.calculator {
+  width: 340px;
+  padding: 20px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 0 30px rgba(0,0,0,0.6);
+}
+
+#display {
+  width: 100%;
+  height: 70px;
+  font-size: 30px;
+  text-align: right;
+  padding: 10px;
+                                                                                      [ Read 169 lines ]
+^G Help          ^O Write Out     ^F Where Is      ^K Cut           ^T Execute       ^C Location      M-U Undo         M-A Set Mark     M-] To Bracket   M-B Previous     ◂ Back
+^X Exit          ^R Read File     ^\ Replace       ^U Paste         ^J Justify       ^/ Go To Line    M-E Redo         M-6 Copy         ^B Where Was     M-F Next         ▸ Forward
